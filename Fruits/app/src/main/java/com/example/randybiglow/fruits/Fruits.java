@@ -8,7 +8,7 @@ public class Fruits {
     private String _name, _region, _season, _medicinal, _description;
 
     public Fruits() {
-        //Following tutorial. Requires empty constructor.
+        //Following SQLite tutorial. Requires empty constructor.
     }
 
     //Constructors to utilize variables.
