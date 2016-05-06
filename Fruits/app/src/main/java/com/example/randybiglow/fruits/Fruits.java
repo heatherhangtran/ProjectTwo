@@ -5,28 +5,28 @@ package com.example.randybiglow.fruits;
  */
 public class Fruits {
     private int _id;
-    private String _name, _region, _season, _medicinalUse, _description;
+    private String _name, _region, _season, _medicinal, _description;
 
     public Fruits() {
         //Following tutorial. Requires empty constructor.
     }
 
     //Constructors to utilize variables.
-    public Fruits (int id, String name, String region, String season, String medicinalUse, String description) {
+    public Fruits (int id, String name, String region, String season, String medicinal, String description) {
         this._id = id;
         this._name = name;
         this._region = region;
         this._season = season;
-        this._medicinalUse = medicinalUse;
+        this._medicinal = medicinal;
         this._description = description;
     }
 
     //Setting a separate Constructor to hold only Strings.
-    public Fruits (String name, String region, String season, String medicinalUse, String description) {
+    public Fruits (String name, String region, String season, String medicinal, String description) {
         this._name = name;
         this._region = region;
         this._season = season;
-        this._medicinalUse = medicinalUse;
+        this._medicinal = medicinal;
         this._description = description;
     }
 
@@ -63,12 +63,12 @@ public class Fruits {
         this._season = season;
     }
 
-    public String getMedicinalUse() {
-        return this._medicinalUse;
+    public String getMedicinal() {
+        return this._medicinal;
     }
 
-    public void setMedicinalUse(String medicinalUse) {
-        this._medicinalUse = medicinalUse;
+    public void setMedicinal(String medicinal) {
+        this._medicinal = medicinal;
     }
 
     public String getDescription() {

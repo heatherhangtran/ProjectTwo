@@ -1,5 +1,6 @@
 package com.example.randybiglow.fruits;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -51,6 +52,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Methods for read and write operations.
     public void addFruits(Fruits fruits) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_ID, fruits.getID());
+        values.put(COL_NAME, fruits.getName());
+        values.put(COL_REGION, fruits.getRegion());
+        values.put(COL_MEDICINAL, fruits.getMedicinal());
+        values.put(COL_DESCRIPTION, fruits.getDescription());
+
+        db.insert(FRUITS_TABLE_NAME, null, values);
+        db.close();
     }
 
     public Fruits getFruits(int id) {
