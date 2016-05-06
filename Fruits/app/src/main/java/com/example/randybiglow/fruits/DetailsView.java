@@ -36,5 +36,7 @@ public class DetailsView extends AppCompatActivity {
 
             textView2.setText( name + " tastes like..." + description + ".");
         }
+
+
     }
 }
