@@ -55,7 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //Methods for read and write operations.
-    public void addFruits(Fruits fruits) {
+    void addFruits(Fruits fruits) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
@@ -70,13 +70,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Fruits getFruits(int id) {
+     public Cursor getFruits() {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(FRUITS_TABLE_NAME,
-                new String[] {COL_ID, COL_NAME, COL_REGION, COL_SEASON, COL_MEDICINAL, COL_DESCRIPTION },
-                COL_ID + "=?",
-                new String[] { String.valueOf(id) },
+                FRUITS_COLUMNS,
+                null,
+                null,
                 null,
                 null,
                 null,
@@ -86,16 +86,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if(cursor != null)
             cursor.moveToFirst();
 
-        //Let's see when the app runs to see if this method is useful to get each fruit.
-        Fruits fruits = new Fruits(Integer.parseInt(cursor.getString(0)),
-                cursor.getString(Integer.parseInt(COL_NAME)),
-                cursor.getString(Integer.parseInt(COL_REGION)),
-                cursor.getString(Integer.parseInt(COL_SEASON)),
-                cursor.getString(Integer.parseInt(COL_MEDICINAL)),
-                cursor.getString(Integer.parseInt(COL_DESCRIPTION))
-        );
-
-        return fruits;
+        return cursor;
     }
 
     //Use this method to display default list (if possible).
@@ -121,19 +112,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
 
         return fruitsList;
-    }
-
-    //This method will return the total number of fruits in database.
-    //Stretch goal.
-    //This is on the tutorial, so might as well try it out.
-    public int getFruitsCount() {
-        String countQuery = "SELECT * FROM " + FRUITS_TABLE_NAME;
-        SQLiteDatabase db = this.getReadableDatabase();
-        //String[] selectionArgs is set to null.
-        Cursor cursor = db.rawQuery(countQuery, null);
-        cursor.close();
-
-        return cursor.getCount();
     }
 
     //Stretch goal.
@@ -166,7 +144,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Using Singleton to fetch each fruit.
     private static DatabaseHandler mInstance;
-    public static DatabaseHandler getmInstance(Context context) {
+    public static DatabaseHandler getInstance(Context context) {
         if(mInstance == null) {
             mInstance = new DatabaseHandler(context.getApplicationContext());
         }
