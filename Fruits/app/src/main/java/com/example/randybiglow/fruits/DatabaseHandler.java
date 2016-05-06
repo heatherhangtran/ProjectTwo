@@ -122,8 +122,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return fruitsList;
     }
 
-    //Seeing where this method leads...
+    //This method will return the total number of fruits in database.
     public int getFruitsCount() {
+        String countQuery = "SELECT * FROM " + FRUITS_TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        //String[] selectionArgs is set to null.
+        Cursor cursor = db.rawQuery(countQuery, null);
+        cursor.close();
+
+        return cursor.getCount();
     }
 
     public int updateFruits(Fruits fruits) {
