@@ -155,5 +155,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Stretch goal.
     public void deleteFruits(Fruits fruits) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(FRUITS_TABLE_NAME,
+                COL_ID + " = ?",
+                new String[] { String.valueOf(fruits.getID()) }
+        );
+        db.close();
     }
 }
