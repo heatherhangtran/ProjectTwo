@@ -123,6 +123,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     //This method will return the total number of fruits in database.
+    //Stretch goal.
+    //This is on the tutorial, so might as well try it out.
     public int getFruitsCount() {
         String countQuery = "SELECT * FROM " + FRUITS_TABLE_NAME;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -133,7 +135,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return cursor.getCount();
     }
 
+    //Stretch goal.
     public int updateFruits(Fruits fruits) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(COL_NAME, fruits.getName());
+        values.put(COL_REGION, fruits.getRegion());
+        values.put(COL_SEASON, fruits.getSeason());
+        values.put(COL_MEDICINAL, fruits.getMedicinal());
+        values.put(COL_DESCRIPTION, fruits.getDescription());
+
+        return db.update(FRUITS_TABLE_NAME,
+                values,
+                COL_ID + " = ?",
+                new String[] {String.valueOf(fruits.getID())}
+                );
     }
 
     //Stretch goal.
