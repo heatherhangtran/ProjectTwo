@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.List;
+
 /**
  * Created by RandyBiglow on 5/6/16.
  */
@@ -45,5 +47,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + FRUITS_TABLE_NAME);
         onCreate(db);
+    }
+
+    //Methods for read and write operations.
+    public void addFruits(Fruits fruits) {
+    }
+
+    public Fruits getFruits(int id) {
+    }
+
+    public List<Fruits> getAllFruits() {
+    }
+
+    //Seeing where this method leads...
+    public int getFruitsCount() {
+    }
+
+    public int updateFruits(Fruits fruits) {
+    }
+
+    //Stretch goal.
+    public void deleteFruits(Fruits fruits) {
     }
 }
