@@ -1,8 +1,8 @@
 package com.example.randybiglow.fruits;
 
 import android.database.Cursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 
 public class DetailsView extends AppCompatActivity {
 
@@ -14,12 +14,17 @@ public class DetailsView extends AppCompatActivity {
         //Utilizing the Singleton to get to this activity.
         DatabaseHandler helper = DatabaseHandler.getInstance(DetailsView.this);
 
-        int id = getIntent().getIntExtra("id", -1);
+        int id = getIntent().getIntExtra("ID", -1);
 
         if(id >= 0) {
             //Grabs all information from the database to display it in the detail page.
-            Cursor cursor = helper.getFruits(id);
-            String name = cursor.getString(DatabaseHandler.getInstance())
+            Cursor cursor = helper.getDescriptionById(id);
+            String name = cursor.getString(cursor.getColumnIndex(DatabaseHandler.COL_NAME));
+            String region = cursor.getString(cursor.getColumnIndex(DatabaseHandler.COL_REGION));
+            String season = cursor.getString(cursor.getColumnIndex(DatabaseHandler.COL_SEASON));
+            String medicinal = cursor.getString(cursor.getColumnIndex(DatabaseHandler.COL_MEDICINAL));
+            String description = cursor.getString(cursor.getColumnIndex(DatabaseHandler.COL_DESCRIPTION));
+
         }
     }
 }

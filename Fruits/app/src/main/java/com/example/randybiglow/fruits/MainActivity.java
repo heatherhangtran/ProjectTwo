@@ -1,28 +1,84 @@
 package com.example.randybiglow.fruits;
 
+import android.app.SearchManager;
+import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.CursorAdapter;
+import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
+    private DatabaseHandler db;
+    private CursorAdapter cursorAdapter;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DatabaseHandler db = new DatabaseHandler(this);
+        listView = (ListView)findViewById(R.id.mainListView);
+        db = DatabaseHandler.getInstance(MainActivity.this);
+        Cursor mCursor = db.getFruits();
+        cursorAdapter = new SimpleCursorAdapter(MainActivity.this,
+                android.R.layout.simple_list_item_1,
+                mCursor,
+                new String[]{DatabaseHandler.COL_NAME},
+                new int[]{android.R.id.text1},
+                0
+        );
+        listView.setAdapter(cursorAdapter);
 
         //Seeding database
-        db.addFruits(new Fruits("Jackfruit", "Asia", "Summer","antibacterial","yellow pieces of heaven"));
-        db.addFruits(new Fruits("Mangosteen", "Asia", "Fall", "diuretic", "purple exterior with white flesh"));
-        db.addFruits(new Fruits("Cherimoya", "North America", "Spring", "anti-inflammatory","sweet custard"));
-        db.addFruits(new Fruits("Lychee", "Asia", "Winter", "anti-acid", "crispy grapes"));
-        db.addFruits(new Fruits("Pitaya", "Asia", "Fall", "anti-aging", "mild kiwi"));
-        db.addFruits(new Fruits("Waterapple", "Asia", "Spring", "anti-diabetes", "tangy apple"));
-        db.addFruits(new Fruits("Breadfruit", "Africa", "Summer", "antioxidants", "spongy"));
-        db.addFruits(new Fruits("Soursop", "South America", "Spring","antimicrobial", "sweet and tangy custard"));
-        db.addFruits(new Fruits("Redcurrant", "Europe", "Summer", "anti-coagulant", "bright red goodness"));
-        db.addFruits(new Fruits("Finger Lime", "Australia", "Winter", "antioxidant", "beautiful sour beings"));
-        db.addFruits(new Fruits("Ganga", "North America", "Spring", "anything", "buds, lots of buds"));
+        db.addFruits(new Fruits(1, "Jackfruit", "Asia", "Summer", "antibacterial", "yellow pieces of heaven"));
+        db.addFruits(new Fruits(2, "Mangosteen", "Asia", "Fall", "diuretic", "purple exterior with white flesh"));
+        db.addFruits(new Fruits(3, "Cherimoya", "North America", "Spring", "anti-inflammatory","sweet custard"));
+        db.addFruits(new Fruits(4, "Lychee", "Asia", "Winter", "anti-acid", "crispy grapes"));
+        db.addFruits(new Fruits(5, "Pitaya", "Asia", "Fall", "anti-aging", "mild kiwi"));
+        db.addFruits(new Fruits(6, "Waterapple", "Asia", "Spring", "anti-diabetes", "tangy apple"));
+        db.addFruits(new Fruits(7, "Breadfruit", "Africa", "Summer", "antioxidants", "spongy"));
+        db.addFruits(new Fruits(8, "Soursop", "South America", "Spring","antimicrobial", "sweet and tangy custard"));
+        db.addFruits(new Fruits(9, "Redcurrant", "Europe", "Summer", "anti-coagulant", "bright red goodness"));
+        db.addFruits(new Fruits(10, "Finger Lime", "Australia", "Winter", "antioxidant", "beautiful sour beings"));
+        db.addFruits(new Fruits(11, "Ganga", "North America", "Spring", "anything", "buds, lots of buds"));
+
+        handleIntent(getIntent());
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, DetailsView.class);
+                Cursor newCursor = (Cursor) parent.getAdapter().getItem(position);
+                intent.putExtra("ID", newCursor.getInt(newCursor.getColumnIndex(DatabaseHandler.COL_ID)));
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        if(Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            Cursor cursor = db.searchFruits(query);
+            listView = (ListView)findViewById(R.id.mainListView);
+            cursorAdapter.swapCursor(cursor);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.options_menu, menu);
+
+        return true;
     }
 }

@@ -6,28 +6,25 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by RandyBiglow on 5/6/16.
  */
 public class DatabaseHandler extends SQLiteOpenHelper {
-    //All variables are private static final.
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "FruitsDatabaseName.db";
-    private static final String FRUITS_TABLE_NAME = "FruitsTableName";
+    //All variables are public static final.
+    public static final int DATABASE_VERSION = 1;
+    public static final String DATABASE_NAME = "FruitsDatabaseName.db";
+    public static final String FRUITS_TABLE_NAME = "FruitsTableName";
 
     //Table columns
-    private static final String COL_ID = "ID";
-    private static final String COL_NAME = "NAME";
-    private static final String COL_REGION = "REGION";
-    private static final String COL_SEASON = "SEASON";
-    private static final String COL_MEDICINAL = "MEDICINAL";
-    private static final String COL_DESCRIPTION = "DESCRIPTION";
+    public static final String COL_ID = "ID";
+    public static final String COL_NAME = "NAME"; //Had to make this not private for the MainActivity to pick up.
+    public static final String COL_REGION = "REGION";
+    public static final String COL_SEASON = "SEASON";
+    public static final String COL_MEDICINAL = "MEDICINAL";
+    public static final String COL_DESCRIPTION = "DESCRIPTION";
 
     //All of the columns together:
-    private static final String[] FRUITS_COLUMNS = {COL_ID, COL_NAME, COL_REGION, COL_MEDICINAL, COL_DESCRIPTION};
+    public static final String[] FRUITS_COLUMNS = {COL_ID, COL_NAME, COL_REGION, COL_SEASON, COL_MEDICINAL, COL_DESCRIPTION};
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -54,6 +51,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //Using Singleton to fetch each fruit.
+    private static DatabaseHandler mInstance;
+    public static DatabaseHandler getInstance(Context context) {
+        if(mInstance == null) {
+            mInstance = new DatabaseHandler(context.getApplicationContext());
+        }
+
+        return mInstance;
+    }
+
     //Methods for read and write operations.
     void addFruits(Fruits fruits) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -71,9 +78,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
      public Cursor getFruits() {
-        SQLiteDatabase db = this.getReadableDatabase();
+         SQLiteDatabase db = this.getReadableDatabase();
 
-        Cursor cursor = db.query(FRUITS_TABLE_NAME,
+         //String[] projection = new String[] {COL_ID, COL_NAME, COL_REGION, COL_SEASON};
+
+         Cursor cursor = db.query(FRUITS_TABLE_NAME,
                 FRUITS_COLUMNS,
                 null,
                 null,
@@ -81,74 +90,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 null,
                 null,
                 null
-        );
+         );
 
-        if(cursor != null)
-            cursor.moveToFirst();
+         return cursor;
+    }
+
+    //Method to send data to DetailView Activity.
+    public Cursor getDescriptionById(int id){
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(FRUITS_TABLE_NAME,
+                new String[]{COL_NAME, COL_REGION, COL_SEASON, COL_MEDICINAL, COL_DESCRIPTION},
+                COL_ID+" = ?",
+                new String[]{String.valueOf(id)},
+                null,
+                null,
+                null,
+                null);
+
+        if(cursor.moveToFirst()){
+            return cursor;
+        } else {
+            return null;
+        }
+    }
+
+    //Allows database to be searchable through three different criteria.
+    public Cursor searchFruits(String query) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(FRUITS_TABLE_NAME,
+                FRUITS_COLUMNS,
+                COL_NAME + " LIKE ? OR " + COL_REGION + " LIKE ? OR " + COL_SEASON + " LIKE ?",
+                new String[]{"%" + query + "%", "%" + query + "%" , "%" + query + "%"},
+                null,
+                null,
+                null,
+                null
+        );
 
         return cursor;
     }
 
-    //Use this method to display default list (if possible).
-    public List<Fruits> getAllFruits() {
-        List<Fruits> fruitsList = new ArrayList<Fruits>();
-        String selectQuery = "SELECT * FROM " + FRUITS_TABLE_NAME;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        if(cursor.moveToFirst()) {
-            do {
-                Fruits fruits = new Fruits();
-                fruits.setID(Integer.parseInt(cursor.getString(0)));
-                fruits.setName(cursor.getString(1));
-                fruits.setRegion(cursor.getString(2));
-                fruits.setSeason(cursor.getString(3));
-                fruits.setMedicinal(cursor.getString(4));
-                fruits.setDescription(cursor.getString(5));
-
-                fruitsList.add(fruits);
-            }while (cursor.moveToFirst());
-        }
-
-        return fruitsList;
-    }
-
-    //Stretch goal.
-    public int updateFruits(Fruits fruits) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(COL_NAME, fruits.getName());
-        values.put(COL_REGION, fruits.getRegion());
-        values.put(COL_SEASON, fruits.getSeason());
-        values.put(COL_MEDICINAL, fruits.getMedicinal());
-        values.put(COL_DESCRIPTION, fruits.getDescription());
-
-        return db.update(FRUITS_TABLE_NAME,
-                values,
-                COL_ID + " = ?",
-                new String[] {String.valueOf(fruits.getID())}
-                );
-    }
-
-    //Stretch goal.
-    public void deleteFruits(Fruits fruits) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(FRUITS_TABLE_NAME,
-                COL_ID + " = ?",
-                new String[] { String.valueOf(fruits.getID()) }
-        );
-        db.close();
-    }
-
-    //Using Singleton to fetch each fruit.
-    private static DatabaseHandler mInstance;
-    public static DatabaseHandler getInstance(Context context) {
-        if(mInstance == null) {
-            mInstance = new DatabaseHandler(context.getApplicationContext());
-        }
-
-        return mInstance;
-    }
 }
