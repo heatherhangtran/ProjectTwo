@@ -1,0 +1,14 @@
+Main Page
+As a user, when I open my Tropical Fruits App, I want to see an introductory page. 
+As a user, when I click on the Explore button, I want to see a new page.
+As a user, when I click on the image behind the text, I don’t want any activities. 
+List Page
+As an explorer, when I am in the Explore Activity, I want to see some information on fruits. 
+As an explorer, when I click on the Search bar, I want to use the keypad. 
+As an explorer, when I enter an entry on the Search bar, I want to see listed options for my entry. 
+As an explorer, when I click on the photo, I will see more information of the fruit. 
+As an explorer, when I click on the name of the fruit, I will see more information. 
+Detailed Page
+As a curious omnivore, when I am in the Detailed Activity, I want to see more information on the fruits. 
+As a curious omnivore, when I click on the the Return button, I want to go back to the Explore Activity. 
+
