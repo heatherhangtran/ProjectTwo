@@ -12,7 +12,7 @@ public class Fruits {
     }
 
     //Constructors to utilize variables.
-    public Contact (int id, String name, String region, String season, String medicinalUse, String description) {
+    public Fruits (int id, String name, String region, String season, String medicinalUse, String description) {
         this._id = id;
         this._name = name;
         this._region = region;
@@ -22,7 +22,7 @@ public class Fruits {
     }
 
     //Setting a separate Constructor to hold only Strings.
-    public Contact (String name, String region, String season, String medicinalUse, String description) {
+    public Fruits (String name, String region, String season, String medicinalUse, String description) {
         this._name = name;
         this._region = region;
         this._season = season;
