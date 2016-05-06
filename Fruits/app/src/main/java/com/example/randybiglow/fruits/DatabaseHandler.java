@@ -98,6 +98,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return fruits;
     }
 
+    //Use this method to display default list (if possible).
     public List<Fruits> getAllFruits() {
         List<Fruits> fruitsList = new ArrayList<Fruits>();
         String selectQuery = "SELECT * FROM " + FRUITS_TABLE_NAME;
@@ -161,5 +162,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[] { String.valueOf(fruits.getID()) }
         );
         db.close();
+    }
+
+    //Using Singleton to fetch each fruit.
+    private static DatabaseHandler mInstance;
+    public static DatabaseHandler getmInstance(Context context) {
+        if(mInstance == null) {
+            mInstance = new DatabaseHandler(context.getApplicationContext());
+        }
+
+        return mInstance;
     }
 }

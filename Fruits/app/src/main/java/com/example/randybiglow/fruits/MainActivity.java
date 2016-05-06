@@ -3,8 +3,6 @@ package com.example.randybiglow.fruits;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.List;
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -26,7 +24,5 @@ public class MainActivity extends AppCompatActivity {
         db.addFruits(new Fruits("Redcurrant", "Europe", "Summer", "anti-coagulant", "bright red goodness"));
         db.addFruits(new Fruits("Finger Lime", "Australia", "Winter", "antioxidant", "beautiful sour beings"));
         db.addFruits(new Fruits("Ganga", "North America", "Spring", "anything", "buds, lots of buds"));
-
-        List<Fruits> fruits = db.getAllFruits();
     }
 }
