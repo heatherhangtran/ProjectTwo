@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,6 +22,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String COL_ID = "ID";
     private static final String COL_NAME = "NAME";
     private static final String COL_REGION = "REGION";
+    private static final String COL_SEASON = "SEASON";
     private static final String COL_MEDICINAL = "MEDICINAL";
     private static final String COL_DESCRIPTION = "DESCRIPTION";
 
@@ -39,6 +41,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 COL_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COL_NAME + " TEXT, " +
                 COL_REGION + " TEXT, " +
+                COL_SEASON + " TEXT, " +
                 COL_MEDICINAL + " TEXT, " +
                 COL_DESCRIPTION + " TEXT )";
         db.execSQL(CREATE_FRUITS_TABLE);
@@ -59,6 +62,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(COL_ID, fruits.getID());
         values.put(COL_NAME, fruits.getName());
         values.put(COL_REGION, fruits.getRegion());
+        values.put(COL_SEASON, fruits.getSeason());
         values.put(COL_MEDICINAL, fruits.getMedicinal());
         values.put(COL_DESCRIPTION, fruits.getDescription());
 
@@ -70,7 +74,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = db.query(FRUITS_TABLE_NAME,
-                new String[] {COL_ID, COL_NAME, COL_REGION, COL_MEDICINAL, COL_DESCRIPTION },
+                new String[] {COL_ID, COL_NAME, COL_REGION, COL_SEASON, COL_MEDICINAL, COL_DESCRIPTION },
                 COL_ID + "=?",
                 new String[] { String.valueOf(id) },
                 null,
@@ -83,9 +87,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         //Let's see when the app runs to see if this method is useful to get each fruit.
-        Fruits fruits = new Fruits(cursor.getString(Integer.parseInt(COL_ID)),
+        Fruits fruits = new Fruits(Integer.parseInt(cursor.getString(0)),
                 cursor.getString(Integer.parseInt(COL_NAME)),
                 cursor.getString(Integer.parseInt(COL_REGION)),
+                cursor.getString(Integer.parseInt(COL_SEASON)),
                 cursor.getString(Integer.parseInt(COL_MEDICINAL)),
                 cursor.getString(Integer.parseInt(COL_DESCRIPTION))
         );
@@ -94,6 +99,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<Fruits> getAllFruits() {
+        List<Fruits> fruitsList = new ArrayList<Fruits>();
+        String selectQuery = "SELECT * FROM " + FRUITS_TABLE_NAME;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()) {
+            do {
+                Fruits fruits = new Fruits();
+                fruits.setID(Integer.parseInt(cursor.getString(0)));
+                fruits.setName(cursor.getString(1));
+                fruits.setRegion(cursor.getString(2));
+                fruits.setSeason(cursor.getString(3));
+                fruits.setMedicinal(cursor.getString(4));
+                fruits.setDescription(cursor.getString(5));
+
+                fruitsList.add(fruits);
+            }while (cursor.moveToFirst());
+        }
+
+        return fruitsList;
     }
 
     //Seeing where this method leads...
