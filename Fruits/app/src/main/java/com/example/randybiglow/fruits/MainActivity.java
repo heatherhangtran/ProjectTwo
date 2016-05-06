@@ -1,6 +1,7 @@
 package com.example.randybiglow.fruits;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.support.v7.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, DetailsView.class);
                 Cursor newCursor = (Cursor) parent.getAdapter().getItem(position);
-                intent.putExtra("ID", newCursor.getInt(newCursor.getColumnIndex(DatabaseHandler.COL_ID)));
+                intent.putExtra("_id", newCursor.getInt(newCursor.getColumnIndex(DatabaseHandler.COL_ID)));
                 startActivity(intent);
             }
         });
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
             Cursor cursor = db.searchFruits(query);
             listView = (ListView)findViewById(R.id.mainListView);
             cursorAdapter.swapCursor(cursor);
+            //cursorAdapter.notifyDataSetChanged();
         }
     }
 
@@ -65,6 +68,10 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         return true;
     }

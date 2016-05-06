@@ -34,7 +34,7 @@ public class DetailsView extends AppCompatActivity {
                             medicinal + "."
             );
 
-            textView2.setText( "Taste... " + description + ".");
+            textView2.setText( name + " tastes like..." + description + ".");
         }
     }
 }
