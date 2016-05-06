@@ -2,6 +2,7 @@ package com.example.randybiglow.fruits;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -66,6 +67,30 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public Fruits getFruits(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.query(FRUITS_TABLE_NAME,
+                new String[] {COL_ID, COL_NAME, COL_REGION, COL_MEDICINAL, COL_DESCRIPTION },
+                COL_ID + "=?",
+                new String[] { String.valueOf(id) },
+                null,
+                null,
+                null,
+                null
+        );
+
+        if(cursor != null)
+            cursor.moveToFirst();
+
+        //Let's see when the app runs to see if this method is useful to get each fruit.
+        Fruits fruits = new Fruits(cursor.getString(Integer.parseInt(COL_ID)),
+                cursor.getString(Integer.parseInt(COL_NAME)),
+                cursor.getString(Integer.parseInt(COL_REGION)),
+                cursor.getString(Integer.parseInt(COL_MEDICINAL)),
+                cursor.getString(Integer.parseInt(COL_DESCRIPTION))
+        );
+
+        return fruits;
     }
 
     public List<Fruits> getAllFruits() {
