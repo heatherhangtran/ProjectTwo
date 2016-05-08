@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Fruits</string>
+    <string name="search">Search hint</string>
+    <string name="menu_search_title">Search</string>
 </resources>
